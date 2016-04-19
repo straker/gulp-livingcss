@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/straker/gulp-livingcss.svg?branch=master)](https://travis-ci.org/straker/gulp-livingcss)
+
 # gulp-livingcss
 
 Gulp wrapper for the LivingCSS Style Guide Generator.
