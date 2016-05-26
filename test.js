@@ -81,3 +81,8 @@ it('should still run the preprocess function', function (cb) {
 
   stream.end();
 });
+
+it('should expose livingcss utility functions', function () {
+  assert(typeof livingcss.utils === 'object');
+  assert(typeof livingcss.utils.readFileGlobs === 'function');
+});

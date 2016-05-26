@@ -93,3 +93,6 @@ module.exports = function (options) {
 
   return through.obj(bufferContents, endStream);
 };
+
+// add livingcss utility functions to gulp plugin
+module.exports.utils = livingcss.utils;
