@@ -27,8 +27,12 @@ gulp.task('default', function () {
 
 ## API
 
-### livingcss([options])
+### livingcss([options], [dest])
 
 #### options
 
 See the LivingCSS [options](https://github.com/straker/livingcss#options).
+
+#### dest
+
+See the LivingCSS [dest](https://github.com/straker/livingcss#usage).
