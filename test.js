@@ -31,7 +31,7 @@ it('should output with LivingCSS', function (cb) {
 });
 
 it('should pass options to LivingCSS', function (cb) {
-  var stream = livingcss({
+  var stream = livingcss('', {
     template: 'fixture.css'
   });
 
@@ -56,7 +56,7 @@ it('should pass options to LivingCSS', function (cb) {
 });
 
 it('should still run the preprocess function', function (cb) {
-  var stream = livingcss({
+  var stream = livingcss('', {
     preprocess: function(context, template, Handlebars) {
       context.title = 'preprocess';
     }

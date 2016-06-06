@@ -20,19 +20,19 @@ var livingcss = require('gulp-livingcss');
 
 gulp.task('default', function () {
   gulp.src('src/styles.css')
-    .pipe(livingcss())
+    .pipe(livingcss('dist'))
     .pipe(gulp.dest('dist'))
 });
 ```
 
 ## API
 
-### livingcss([options], [dest])
+### livingcss(dest, [options])
+
+#### dest
+
+The `dest` parameter is used to create the correct relative URLs from the Style Guide to the linked stylesheets. See the LivingCSS [dest](https://github.com/straker/livingcss#usage).
 
 #### options
 
 See the LivingCSS [options](https://github.com/straker/livingcss#options).
-
-#### dest
-
-See the LivingCSS [dest](https://github.com/straker/livingcss#usage).

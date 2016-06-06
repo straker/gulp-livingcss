@@ -8,12 +8,11 @@ var minify = require('html-minifier').minify;
 
 /**
  * Buffer all files before passing the file list to livingcss.
+ * @param {string} dest - Destination path to pass to livingcss.
  * @param {object} [options] - Options to pass to livingcss.
- * @param {string} [dest] - Destination path to pass to livingcss.
  */
-module.exports = function (options, dest) {
+module.exports = function (dest, options) {
   options = options || {};
-  dest = dest || '';
 
   // list of all files from gulp.src
   var files = [];
@@ -49,8 +48,6 @@ module.exports = function (options, dest) {
     // through that step of the generate script
     var preprocessFunc = options.preprocess;
     options.preprocess = function(context, template, Handlebars) {
-
-      var dest = '';
 
       // if no preprocess function then resolve a promise
       var preprocess = (preprocessFunc ?
