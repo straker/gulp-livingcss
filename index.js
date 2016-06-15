@@ -42,6 +42,7 @@ module.exports = function (dest, options) {
    */
   function endStream(cb) {
     var _this = this;
+    var pageCount = 0;
 
     // because we want to create a file for the stream and not one through fs.write
     // we need to override the preprocess function to return false so it doesn't go
@@ -76,7 +77,10 @@ module.exports = function (dest, options) {
             contents: new Buffer(html)
           }));
 
-          cb();
+          // only finish writing to the stream if all pages have been added
+          if (++pageCount === context.pages.length) {
+            cb();
+          }
         })
       .catch(function(err) {
         if (err) {
