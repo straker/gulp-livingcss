@@ -23,7 +23,7 @@
   "dependencies": {
     "gulp-util": "^3.0.7",
     "html-minifier": "^2.0.0",
-    "livingcss": "^3.0.0",
+    "livingcss": "^4.0.0",
     "through2": "^2.0.1"
   },
   "devDependencies": {

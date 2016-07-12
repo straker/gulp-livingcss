@@ -42,7 +42,6 @@ module.exports = function (dest, options) {
    */
   function endStream(cb) {
     var _this = this;
-    var pageCount = 0;
 
     // because we want to create a file for the stream and not one through fs.write
     // we need to override the preprocess function to return false so it doesn't go
@@ -76,24 +75,17 @@ module.exports = function (dest, options) {
             path: context.id + '.html',
             contents: new Buffer(html)
           }));
-
-          // only finish writing to the stream if all pages have been added
-          if (++pageCount === context.pages.length) {
-            cb();
-          }
         })
       .catch(function(err) {
         if (err) {
           console.error(err.stack);
         }
-
-        cb();
       });
 
       return false;
     }
 
-    livingcss(files, dest, options);
+    livingcss(files, dest, options).then(function() { cb(); });
   }
 
   return through.obj(bufferContents, endStream);
