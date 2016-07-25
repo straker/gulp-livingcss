@@ -5,6 +5,7 @@ var path = require('path');
 
 var contents = '/**\n * Test Fixture.\n * @section Fixture\n */';
 var pages = '/**\n * Page 1\n * @section Page 1\n *\n\n/**\n * Page 2\n * @section Page 2\n *';
+var empty = '';
 
 it('should output with LivingCSS', function (cb) {
   var stream = livingcss();
@@ -112,6 +113,60 @@ it('should add multiple pages to the stream', function (cb) {
     base: __dirname,
     path: path.join(__dirname, 'pages.css'),
     contents: new Buffer(pages)
+  }));
+
+  stream.end();
+});
+
+it('should complete when no files have JSDoc like comments', function(cb) {
+  var stream = livingcss();
+
+  stream.on('data', function (file) {
+    try {
+      cb();
+    }
+    catch (e) {
+      cb(e);
+    }
+  });
+
+  stream.on('end', function() {
+    cb();
+  });
+
+  stream.write(new gutil.File({
+    cwd: __dirname,
+    base: __dirname,
+    path: path.join(__dirname, 'empty.css'),
+    contents: new Buffer(empty)
+  }));
+
+  stream.end();
+});
+
+it('should properly handle async operations in the preprocess function', function(cb) {
+  var stream = livingcss('', {
+    preprocess: function() {
+      return livingcss.utils.readFileGlobs('test/*.css', function() {
+
+      });
+    }
+  });
+
+  stream.on('data', function (file) {
+    try {
+      cb();
+    }
+    catch (e) {
+      cb(e);
+    }
+  });
+
+  stream.write(new gutil.File({
+    cwd: __dirname,
+    base: __dirname,
+    path: path.join(__dirname, 'fixture.css'),
+    contents: new Buffer(contents)
   }));
 
   stream.end();
