@@ -59,7 +59,7 @@ module.exports = function (dest, options) {
         preprocess = (preprocess !== false ? Promise.resolve() : Promise.reject());
       }
 
-      preprocess.then(
+      return preprocess.then(
         function success() {
           var html = Handlebars.compile(template)(context);
 
@@ -75,14 +75,18 @@ module.exports = function (dest, options) {
             path: context.id + '.html',
             contents: new Buffer(html)
           }));
+
+          // reject this promise so livingcss doesn't create files
+          return Promise.reject();
         })
       .catch(function(err) {
         if (err) {
           console.error(err.stack);
         }
-      });
 
-      return false;
+        // reject this promise so livingcss doesn't create files
+        return Promise.reject(err);
+      });
     }
 
     livingcss(files, dest, options).then(function() { cb(); });
