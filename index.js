@@ -59,34 +59,43 @@ module.exports = function (dest, options) {
         preprocess = (preprocess !== false ? Promise.resolve() : Promise.reject());
       }
 
-      return preprocess.then(
-        function success() {
-          var html = Handlebars.compile(template)(context);
+      return preprocess
+        // .then(function() {
+        //   // inline all stylesheets for polymer shared styles to work
+        //   // @see https://www.polymer-project.org/1.0/docs/devguide/styling#style-modules
+        //   return livingcss.utils.readFiles(context.stylesheets, function(data, file) {
+        //     context.parsedStylesheets = context.parsedStylesheets || [];
+        //     context.parsedStylesheets.push(data);
+        //   });
+        // })
+        .then(
+          function success() {
+            var html = Handlebars.compile(template)(context);
 
-          if (options.minify) {
-            html = minify(html, {
-              collapseWhitespace: true
-            });
+            if (options.minify) {
+              html = minify(html, {
+                collapseWhitespace: true
+              });
+            }
+
+            // add output file to stream
+            _this.push(new File({
+              name: context.id + '.html',
+              path: context.id + '.html',
+              contents: new Buffer(html)
+            }));
+
+            // reject this promise so livingcss doesn't create files
+            return Promise.reject();
+          })
+        .catch(function(err) {
+          if (err) {
+            console.error(err.stack);
           }
 
-          // add output file to stream
-          _this.push(new File({
-            name: context.id + '.html',
-            path: context.id + '.html',
-            contents: new Buffer(html)
-          }));
-
           // reject this promise so livingcss doesn't create files
-          return Promise.reject();
-        })
-      .catch(function(err) {
-        if (err) {
-          console.error(err.stack);
-        }
-
-        // reject this promise so livingcss doesn't create files
-        return Promise.reject(err);
-      });
+          return Promise.reject(err);
+        });
     }
 
     livingcss(files, dest, options).then(function() { cb(); });
