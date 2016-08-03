@@ -60,14 +60,14 @@ module.exports = function (dest, options) {
       }
 
       return preprocess
-        // .then(function() {
-        //   // inline all stylesheets for polymer shared styles to work
-        //   // @see https://www.polymer-project.org/1.0/docs/devguide/styling#style-modules
-        //   return livingcss.utils.readFiles(context.stylesheets, function(data, file) {
-        //     context.parsedStylesheets = context.parsedStylesheets || [];
-        //     context.parsedStylesheets.push(data);
-        //   });
-        // })
+        .then(function() {
+          // inline all stylesheets for polymer shared styles to work
+          // @see https://www.polymer-project.org/1.0/docs/devguide/styling#style-modules
+          return livingcss.utils.readFiles(context.stylesheets, function(data, file) {
+            context.parsedStylesheets = context.parsedStylesheets || [];
+            context.parsedStylesheets.push(data);
+          });
+        })
         .then(
           function success() {
             var html = Handlebars.compile(template)(context);
