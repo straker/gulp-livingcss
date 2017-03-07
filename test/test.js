@@ -195,3 +195,27 @@ it('should inline stylesheets for polymer', function(cb) {
 
   stream.end();
 });
+
+it('should read the css file when a destination is passed in', function(cb) {
+  var stream = livingcss('dist');
+
+  stream.on('data', function (file) {
+    try {
+      assert(/\* Test Fixture\./.test(file.contents.toString()), file.contents.toString());
+      assert(/\* @section Fixture/.test(file.contents.toString()), file.contents.toString());
+      cb();
+    }
+    catch (e) {
+      cb(e);
+    }
+  });
+
+  stream.write(new gutil.File({
+    cwd: __dirname,
+    base: __dirname,
+    path: path.join(__dirname, 'fixture.css'),
+    contents: new Buffer(contents)
+  }));
+
+  stream.end();
+});

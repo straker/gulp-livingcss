@@ -1,5 +1,6 @@
 var gutil = require('gulp-util');
 var through = require('through2');
+var path = require('path');
 var File = gutil.File;
 var PluginError = gutil.PluginError;
 
@@ -61,9 +62,16 @@ module.exports = function (dest, options) {
 
       return preprocess
         .then(function() {
+
+          // read the stylesheets from an absolute path so we're not trying to
+          // read them from the livingcss directory
+          var stylesheets = context.stylesheets.map(function(file) {
+            return path.join( process.cwd(), dest || '.', file);
+          });
+
           // inline all stylesheets for polymer shared styles to work
           // @see https://www.polymer-project.org/1.0/docs/devguide/styling#style-modules
-          return livingcss.utils.readFiles(context.stylesheets, function(data, file) {
+          return livingcss.utils.readFiles(stylesheets, function(data, file) {
             context.parsedStylesheets = context.parsedStylesheets || [];
             context.parsedStylesheets.push(data);
           });
