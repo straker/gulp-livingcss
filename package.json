@@ -12,7 +12,8 @@
     "guide",
     "generator",
     "css",
-    "gulp"
+    "gulp",
+    "gulpplugin"
   ],
   "author": "Steven Lambert <steven@sklambert.com> (http://sklambert.com/)",
   "license": "MIT",

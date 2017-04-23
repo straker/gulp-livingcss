@@ -29,7 +29,7 @@ module.exports = function (dest, options) {
 
     // no streams
     if (file.isStream()) {
-      this.emit('error', new PluginError('generator',  'Streaming not supported'));
+      this.emit('error', new PluginError('gulp-livingcss', 'Streaming not supported'));
       return cb();
     }
 
@@ -43,6 +43,8 @@ module.exports = function (dest, options) {
    */
   function endStream(cb) {
     var _this = this;
+
+    options._squelchLogging = true;
 
     // because we want to create a file for the stream and not one through fs.write
     // we need to override the preprocess function to return false so it doesn't go
@@ -63,6 +65,12 @@ module.exports = function (dest, options) {
       return preprocess
         .then(function() {
 
+          // skip processing the stylesheets and handlebars template and just
+          // return the context object
+          return options.streamContext ? Promise.reject() : Promise.resolve();
+        })
+        .then(function() {
+
           // read the stylesheets from an absolute path so we're not trying to
           // read them from the livingcss directory
           var stylesheets = context.stylesheets.map(function(file) {
@@ -76,29 +84,40 @@ module.exports = function (dest, options) {
             context.parsedStylesheets.push(data);
           });
         })
-        .then(
-          function success() {
-            var html = Handlebars.compile(template)(context);
+        .then(function success() {
+          var html = Handlebars.compile(template)(context);
 
-            if (options.minify) {
-              html = minify(html, {
-                collapseWhitespace: true
-              });
-            }
+          if (options.minify) {
+            html = minify(html, {
+              collapseWhitespace: true
+            });
+          }
 
-            // add output file to stream
-            _this.push(new File({
-              name: context.id + '.html',
-              path: context.id + '.html',
-              contents: new Buffer(html)
-            }));
+          // add output file to stream
+          _this.push(new File({
+            name: context.id + '.html',
+            path: context.id + '.html',
+            contents: new Buffer(html)
+          }));
 
-            // reject this promise so livingcss doesn't create files
-            return Promise.reject();
-          })
+          // reject this promise so livingcss doesn't create files
+          return Promise.reject();
+        })
         .catch(function(err) {
           if (err) {
-            console.error(err.stack);
+            _this.emit('error', new PluginError({
+              plugin: 'gulp-livingcss',
+              message: e.message
+            }));
+          }
+
+          if (options.streamContext) {
+            // add context file to stream
+            _this.push(new File({
+              name: context.id + '.json',
+              path: context.id + '.json',
+              contents: new Buffer(JSON.stringify(context))
+            }));
           }
 
           // reject this promise so livingcss doesn't create files
@@ -106,7 +125,13 @@ module.exports = function (dest, options) {
         });
     }
 
-    livingcss(files, dest, options).then(function() { cb(); });
+    livingcss(files, dest, options).then(function() { cb(); })
+      .catch(function(e) {
+        _this.emit('error', new PluginError({
+          plugin: 'gulp-livingcss',
+          message: e.message
+        }));
+      });
   }
 
   return through.obj(bufferContents, endStream);

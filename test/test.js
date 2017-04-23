@@ -219,3 +219,56 @@ it('should read the css file when a destination is passed in', function(cb) {
 
   stream.end();
 });
+
+it('should emit an error event if livingcss threw an error', function(cb) {
+  var stream = livingcss('dist');
+
+  stream.on('data', function (file) {
+
+    // this should not be hit
+    cb(new Error('gulp-livingcss did not emit error event'))
+  });
+
+  stream.on('error', function(err) {
+    try {
+      assert(err.message.indexOf('section \'Fixture\' is not defined') !== -1);
+      cb();
+    }
+    catch (e) {
+      cb(e);
+    }
+  });
+
+  stream.write(new gutil.File({
+    cwd: __dirname,
+    base: __dirname,
+    path: path.join(__dirname, 'undefined-section.css'),
+    contents: new Buffer('/**\n * @sectionof Fixture\n */')
+  }));
+
+  stream.end();
+});
+
+it('should allow streaming the context object', function(cb) {
+  var stream = livingcss('dist', {streamContext: true});
+
+  stream.on('data', function (file) {
+    try {
+      var context = JSON.parse(file.contents.toString());
+      assert(context.sections[0].name === 'Fixture');
+      cb();
+    }
+    catch (e) {
+      cb(e);
+    }
+  });
+
+  stream.write(new gutil.File({
+    cwd: __dirname,
+    base: __dirname,
+    path: path.join(__dirname, 'fixture.css'),
+    contents: new Buffer(contents)
+  }));
+
+  stream.end();
+});
