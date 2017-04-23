@@ -36,3 +36,5 @@ The `dest` parameter is used to create the correct relative URLs from the Style 
 #### options
 
 See the LivingCSS [options](https://github.com/straker/livingcss#options).
+
+* `streamContext` - If the task should return the context object rather than the generated HTML file.
