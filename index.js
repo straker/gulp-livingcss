@@ -81,7 +81,7 @@ module.exports = function (dest, options) {
           // @see https://www.polymer-project.org/1.0/docs/devguide/styling#style-modules
           return livingcss.utils.readFiles(stylesheets, function(data, file) {
             context.parsedStylesheets = context.parsedStylesheets || [];
-            context.parsedStylesheets.push(data);
+            context.parsedStylesheets.push(livingcss.utils.fixSVGIssue(data));
           });
         })
         .then(function success() {
