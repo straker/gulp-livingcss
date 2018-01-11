@@ -103,8 +103,8 @@ module.exports = function (dest, options) {
           // reject this promise so livingcss doesn't create files
           return Promise.reject();
         })
-        .catch(function(err) {
-          if (err) {
+        .catch(function(e) {
+          if (e) {
             _this.emit('error', new PluginError({
               plugin: 'gulp-livingcss',
               message: e.message
@@ -121,7 +121,7 @@ module.exports = function (dest, options) {
           }
 
           // reject this promise so livingcss doesn't create files
-          return Promise.reject(err);
+          return Promise.reject(e);
         });
     }
 
