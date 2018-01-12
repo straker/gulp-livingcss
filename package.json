@@ -1,6 +1,6 @@
 {
   "name": "gulp-livingcss",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "Gulp wrapper for the LivingCSS Style Guide Generator",
   "main": "index.js",
   "repository": {
