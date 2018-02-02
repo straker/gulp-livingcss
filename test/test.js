@@ -1,7 +1,8 @@
 var assert = require('assert');
-var gutil = require('gulp-util');
+var File = require('vinyl');
 var livingcss = require('../');
 var path = require('path');
+var normalizeNewline = require('normalize-newline');
 
 var contents = '/**\n * Test Fixture.\n * @section Fixture\n */';
 var pages = '/**\n * Page 1\n * @section Page 1\n *\n\n/**\n * Page 2\n * @section Page 2\n *';
@@ -22,7 +23,7 @@ it('should output with LivingCSS', function (cb) {
     }
   });
 
-  stream.write(new gutil.File({
+  stream.write(new File({
     cwd: __dirname,
     base: __dirname,
     path: path.join(__dirname, 'fixture.css'),
@@ -36,10 +37,11 @@ it('should pass options to LivingCSS', function (cb) {
   var stream = livingcss('', {
     template: 'test/fixture.css'
   });
+  
 
   stream.on('data', function (file) {
     try {
-      assert(file.contents.toString() === contents, file.contents.toString());
+      assert( normalizeNewline(file.contents.toString()) === contents, file.contents.toString());
       cb();
     }
     catch (e) {
@@ -47,7 +49,7 @@ it('should pass options to LivingCSS', function (cb) {
     }
   });
 
-  stream.write(new gutil.File({
+  stream.write(new File({
     cwd: __dirname,
     base: __dirname,
     path: path.join(__dirname, 'fixture.css'),
@@ -74,7 +76,7 @@ it('should still run the preprocess function', function (cb) {
     }
   });
 
-  stream.write(new gutil.File({
+  stream.write(new File({
     cwd: __dirname,
     base: __dirname,
     path: path.join(__dirname, 'fixture.css'),
@@ -108,7 +110,7 @@ it('should add multiple pages to the stream', function (cb) {
     }
   });
 
-  stream.write(new gutil.File({
+  stream.write(new File({
     cwd: __dirname,
     base: __dirname,
     path: path.join(__dirname, 'pages.css'),
@@ -134,7 +136,7 @@ it('should complete when no files have JSDoc like comments', function(cb) {
     cb();
   });
 
-  stream.write(new gutil.File({
+  stream.write(new File({
     cwd: __dirname,
     base: __dirname,
     path: path.join(__dirname, 'empty.css'),
@@ -162,7 +164,7 @@ it('should properly handle async operations in the preprocess function', functio
     }
   });
 
-  stream.write(new gutil.File({
+  stream.write(new File({
     cwd: __dirname,
     base: __dirname,
     path: path.join(__dirname, 'fixture.css'),
@@ -186,7 +188,7 @@ it('should inline stylesheets for polymer', function(cb) {
     }
   });
 
-  stream.write(new gutil.File({
+  stream.write(new File({
     cwd: __dirname,
     base: __dirname,
     path: path.join(__dirname, 'fixture.css'),
@@ -210,7 +212,7 @@ it('should read the css file when a destination is passed in', function(cb) {
     }
   });
 
-  stream.write(new gutil.File({
+  stream.write(new File({
     cwd: __dirname,
     base: __dirname,
     path: path.join(__dirname, 'fixture.css'),
@@ -239,7 +241,7 @@ it('should emit an error event if livingcss threw an error', function(cb) {
     }
   });
 
-  stream.write(new gutil.File({
+  stream.write(new File({
     cwd: __dirname,
     base: __dirname,
     path: path.join(__dirname, 'undefined-section.css'),
@@ -263,7 +265,7 @@ it('should allow streaming the context object', function(cb) {
     }
   });
 
-  stream.write(new gutil.File({
+  stream.write(new File({
     cwd: __dirname,
     base: __dirname,
     path: path.join(__dirname, 'fixture.css'),
