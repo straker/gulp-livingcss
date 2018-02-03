@@ -1,8 +1,7 @@
-var gutil = require('gulp-util');
 var through = require('through2');
 var path = require('path');
-var File = gutil.File;
-var PluginError = gutil.PluginError;
+var File = require('vinyl') ;
+var PluginError = require('plugin-error');
 
 var livingcss = require('livingcss');
 var minify = require('html-minifier').minify;
