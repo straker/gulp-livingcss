@@ -108,6 +108,8 @@ module.exports = function (dest, options) {
               plugin: 'gulp-livingcss',
               message: e.message
             }));
+
+            throw e;
           }
 
           if (options.streamContext) {
@@ -130,6 +132,8 @@ module.exports = function (dest, options) {
           plugin: 'gulp-livingcss',
           message: e.message
         }));
+
+        throw e;
       });
   }
 
