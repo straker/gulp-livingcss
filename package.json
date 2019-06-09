@@ -22,7 +22,7 @@
   },
   "homepage": "https://github.com/straker/gulp-livingcss",
   "dependencies": {
-    "html-minifier": "^2.0.0",
+    "html-minifier": "^4.0.0",
     "livingcss": "^6.0.0",
     "normalize-newline": "^3.0.0",
     "plugin-error": "^1.0.1",
