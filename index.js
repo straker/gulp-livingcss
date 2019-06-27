@@ -1,4 +1,5 @@
 var through = require('through2');
+var CleanCSS = require('clean-css');
 var path = require('path');
 var File = require('vinyl') ;
 var PluginError = require('plugin-error');
@@ -84,6 +85,19 @@ module.exports = function (dest, options) {
           });
         })
         .then(function success() {
+          // if we want to clean the css with clean-css
+          // We can pass options through if needed
+          // This will make sure that the size of the included styles are low
+          if(options.cleanCSS){
+            var allCSS = context.parsedStylesheets
+              .map(function(stylesheet) {
+                return stylesheet;
+              })
+              .join('\n');
+            var allDedupedCSS =  new CleanCSS({ level: 2 })
+              .minify(allCSS)
+              context.parsedStylesheets = [allDedupedCSS.styles];;
+          }
           var html = Handlebars.compile(template)(context);
 
           if (options.minify) {
