@@ -1,4 +1,5 @@
 var gutil = require('gulp-util');
+var CleanCSS = require('clean-css');
 var through = require('through2');
 var path = require('path');
 var File = gutil.File;
