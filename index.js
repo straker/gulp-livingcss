@@ -120,7 +120,7 @@ module.exports = function (dest, options) {
           if (err) {
             _this.emit('error', new PluginError({
               plugin: 'gulp-livingcss',
-              message: e.message
+              message: err.message
             }));
           }
 
