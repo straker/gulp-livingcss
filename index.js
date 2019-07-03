@@ -1,4 +1,5 @@
 var through = require('through2');
+
 var path = require('path');
 var File = require('vinyl') ;
 var PluginError = require('plugin-error');
@@ -84,11 +85,13 @@ module.exports = function (dest, options) {
           });
         })
         .then(function success() {
+
           var html = Handlebars.compile(template)(context);
 
           if (options.minify) {
             html = minify(html, {
-              collapseWhitespace: true
+              collapseWhitespace: true,
+              minifyCSS: options.minifyCSS || false
             });
           }
 
